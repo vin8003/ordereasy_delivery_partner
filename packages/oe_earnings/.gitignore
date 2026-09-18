@@ -1,0 +1,9 @@
+# Dart / pub
+.dart_tool/
+.packages
+pubspec.lock
+
+# Coverage / IDE
+coverage/
+*.iml
+.idea/
