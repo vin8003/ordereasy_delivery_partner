@@ -6,13 +6,20 @@ class DayFilter {
   const DayFilter.all() : day = null;
 
   factory DayFilter.on(DateTime day) {
-    return DayFilter._(DateTime.utc(day.year, day.month, day.day));
+    final utc = day.toUtc();
+    return DayFilter._(DateTime.utc(utc.year, utc.month, utc.day));
   }
 
   const DayFilter._(this.day);
 
   /// UTC date-only instant, or `null` when every completed day is included.
   final DateTime? day;
+
+  @override
+  bool operator ==(Object other) => other is DayFilter && other.day == day;
+
+  @override
+  int get hashCode => day.hashCode;
 
   /// `YYYY-MM-DD` query stub, or `null` for [DayFilter.all].
   String? get queryDay {

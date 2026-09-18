@@ -14,9 +14,9 @@ rejected.
 ## Day filter stub
 
 `DayFilter.all()` returns every fixture. `DayFilter.on(day)` keeps
-entries whose `completedAt` falls on that UTC calendar day. The dummy
-client records `?day=YYYY-MM-DD` on `historyUrl` but does not perform
-HTTP.
+entries whose `completedAt` falls on the UTC calendar day of that
+instant (`day.toUtc()`). The dummy client records `?day=YYYY-MM-DD` on
+`historyUrl` but does not perform HTTP.
 
 ```dart
 final repo = HistoryRepository(); // baseUrl: http://127.0.0.1:8080

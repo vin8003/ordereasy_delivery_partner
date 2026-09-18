@@ -51,6 +51,13 @@ void main() {
       );
       expect(entries.map((e) => e.id).toSet().length, entries.length);
     });
+
+    test('completed fixtures cannot be mutated', () {
+      expect(
+        () => HistoryFixtures.completed.add(HistoryFixtures.completed.first),
+        throwsA(isA<UnsupportedError>()),
+      );
+    });
   });
 
   group('HistoryRepository', () {

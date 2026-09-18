@@ -20,6 +20,23 @@ void main() {
       expect(filter.matches(DateTime.utc(2026, 9, 17, 23, 59, 59)), isFalse);
       expect(filter.matches(DateTime.utc(2026, 9, 19)), isFalse);
     });
+
+    test('on() matches the same instant after converting local to UTC', () {
+      final local = DateTime(2026, 9, 18, 2, 0);
+      final filter = DayFilter.on(local);
+      final utc = local.toUtc();
+
+      expect(filter.matches(local), isTrue);
+      expect(filter.matches(utc), isTrue);
+      expect(filter.day, DateTime.utc(utc.year, utc.month, utc.day));
+    });
+
+    test('equal UTC days compare equal', () {
+      expect(
+        DayFilter.on(DateTime.utc(2026, 9, 18, 10)),
+        DayFilter.on(DateTime.utc(2026, 9, 18, 22)),
+      );
+    });
   });
 
   group('HistoryRepository day filter stub', () {
