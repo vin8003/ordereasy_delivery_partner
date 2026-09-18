@@ -9,7 +9,7 @@ import 'status_result.dart';
 /// HTTP client for OrderEasy delivery status transitions.
 ///
 /// Default [baseUrl] is a local origin (`http://127.0.0.1:8080`). Callers
-/// inject the real host; this package never hardcodes `*.ordereasy.win`.
+/// inject the real host; this package does not ship a production hostname.
 class StatusClient {
   StatusClient({
     String baseUrl = defaultBaseUrl,
