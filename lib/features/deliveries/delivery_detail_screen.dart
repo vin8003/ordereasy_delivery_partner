@@ -120,11 +120,13 @@ class _DetailBody extends StatelessWidget {
         if (!delivery.status.isTerminal) ...[
           const SizedBox(height: 12),
           FilledButton(
+            key: const Key('mark_delivered'),
             onPressed: onMarkDelivered,
             child: const Text('Mark delivered'),
           ),
           const SizedBox(height: 8),
           OutlinedButton(
+            key: const Key('mark_failed'),
             onPressed: onMarkFailed,
             child: Text(
               'Mark delivery_failed',

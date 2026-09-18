@@ -102,6 +102,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ],
                     const SizedBox(height: 20),
                     FilledButton(
+                      key: const Key('login_continue'),
                       onPressed: busy ? null : _submit,
                       child: busy
                           ? const SizedBox(

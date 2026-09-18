@@ -125,6 +125,7 @@ class _MarkStatusScreenState extends ConsumerState<MarkStatusScreen> {
           ],
           const SizedBox(height: 24),
           FilledButton(
+            key: const Key('sync_status'),
             onPressed: _submitting ? null : _submit,
             child: _submitting
                 ? const SizedBox(
