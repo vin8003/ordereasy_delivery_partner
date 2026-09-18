@@ -1,5 +1,5 @@
 /// Isolated dummy client for accept/reject assigned delivery actions.
-library oe_accept;
+library;
 
 export 'src/accept_client.dart';
 export 'src/accept_result.dart';
