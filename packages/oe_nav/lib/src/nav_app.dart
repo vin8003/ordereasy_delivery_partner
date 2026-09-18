@@ -86,6 +86,7 @@ class _OeNavAppState extends State<OeNavApp> {
     final router = _router;
     if (router == null) {
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: theme,
         home: OeNavIndexedHost(
           destinations: widget.destinations,
@@ -95,6 +96,7 @@ class _OeNavAppState extends State<OeNavApp> {
     }
 
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       theme: theme,
       routerConfig: router,
     );
