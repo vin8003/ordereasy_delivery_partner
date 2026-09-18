@@ -16,21 +16,41 @@ keep the built-in placeholders).
   does not path-depend on `oe_auth`, `oe_orders`, or `oe_status`.
 - No HTTP. Do not point this package at live `*.ordereasy.win` hosts.
 
+## Host dependency
+
+```yaml
+dependencies:
+  oe_nav:
+    path: packages/oe_nav
+```
+
 ## Public API
 
+The **host owns `GoRouter`**. Compose the tab shell next to splash, login,
+and order-detail routes:
+
 ```dart
+import 'package:go_router/go_router.dart';
 import 'package:oe_nav/oe_nav.dart';
 
-// go_router shell (Material 3 NavigationBar)
-final router = createOeNavRouter(
-  destinations: OeNavDestinations(
-    orders: (context) => const OrdersImportStub(),
-    map: (context) => const MapImportStub(),
-  ),
+final router = GoRouter(
+  initialLocation: '/orders',
+  routes: [
+    GoRoute(path: '/login', builder: (context, state) => const LoginStub()),
+    oeNavStatefulShellRoute(
+      destinations: OeNavDestinations(
+        orders: (context) => const OrdersImportStub(),
+        map: (context) => const MapImportStub(),
+      ),
+    ),
+  ],
 );
+```
 
-// Or Navigator / IndexedStack without go_router
+Navigator / `IndexedStack` without go_router:
+
+```dart
 const OeNavIndexedHost();
 ```
 
-`OeNavApp` is a tiny Material 3 host for widget tests and local previews.
+`createOeNavRouter` and `OeNavApp` are preview/test helpers only.

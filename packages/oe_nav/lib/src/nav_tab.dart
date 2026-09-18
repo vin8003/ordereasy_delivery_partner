@@ -31,7 +31,7 @@ enum OeNavTab {
         orders => Icons.local_shipping_outlined,
         map => Icons.map_outlined,
         earnings => Icons.payments_outlined,
-        history => Icons.history,
+        history => Icons.receipt_long_outlined,
         profile => Icons.person_outline,
       };
 
@@ -40,7 +40,7 @@ enum OeNavTab {
         orders => Icons.local_shipping,
         map => Icons.map,
         earnings => Icons.payments,
-        history => Icons.history,
+        history => Icons.receipt_long,
         profile => Icons.person,
       };
 

@@ -24,15 +24,12 @@ class OeNavIndexedHost extends StatefulWidget {
 }
 
 class _OeNavIndexedHostState extends State<OeNavIndexedHost> {
-  late OeNavTab _tab = widget.initialTab;
+  late OeNavTab _tab;
 
   @override
-  void didUpdateWidget(covariant OeNavIndexedHost oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.initialTab != widget.initialTab &&
-        widget.initialTab != _tab) {
-      _tab = widget.initialTab;
-    }
+  void initState() {
+    super.initState();
+    _tab = widget.initialTab;
   }
 
   @override

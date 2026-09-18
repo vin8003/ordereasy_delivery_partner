@@ -28,6 +28,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byKey(OeNavKeys.page(OeNavTab.map)), findsOneWidget);
     expect(find.text('Map placeholder'), findsOneWidget);
+    expect(find.text('Orders placeholder'), findsNothing);
 
     await tester.tap(find.byKey(OeNavKeys.destination(OeNavTab.earnings)));
     await tester.pumpAndSettle();
@@ -76,6 +77,33 @@ void main() {
     await tester.tap(find.byKey(OeNavKeys.destination(OeNavTab.map)));
     await tester.pumpAndSettle();
     expect(find.text('map-import-stub'), findsOneWidget);
+    expect(find.text('orders-import-stub'), findsNothing);
+  });
+
+  testWidgets('OeNavApp disposes its GoRouter without leaking exceptions', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const OeNavApp());
+    await tester.pumpAndSettle();
+    await tester.pumpWidget(const SizedBox.shrink());
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('five destinations fit a 360-wide phone without overflow', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 640);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    await tester.pumpWidget(const OeNavApp());
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    for (final tab in OeNavTab.values) {
+      expect(find.byKey(OeNavKeys.destination(tab)), findsOneWidget);
+    }
   });
 
   testWidgets('shell is Material 3 and follows the ambient theme', (

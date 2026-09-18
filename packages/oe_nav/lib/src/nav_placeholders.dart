@@ -17,11 +17,11 @@ class OeNavPlaceholderPage extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return ColoredBox(
+      key: OeNavKeys.page(tab),
       color: colorScheme.surface,
       child: Center(
         child: Text(
           '${tab.label} placeholder',
-          key: OeNavKeys.page(tab),
           style: theme.textTheme.headlineSmall?.copyWith(
             color: colorScheme.onSurface,
           ),

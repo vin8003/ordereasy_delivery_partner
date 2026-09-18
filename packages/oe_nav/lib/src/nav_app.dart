@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'nav_destinations.dart';
 import 'nav_indexed_host.dart';
@@ -9,7 +10,9 @@ import 'nav_theme.dart';
 /// Tiny Material 3 host used by tests and dummy previews.
 ///
 /// This is not a production app and does not call any network host.
-class OeNavApp extends StatelessWidget {
+/// Production apps should own [GoRouter] and compose
+/// [oeNavStatefulShellRoute].
+class OeNavApp extends StatefulWidget {
   /// Creates a theme-aware shell around the nav stub.
   const OeNavApp({
     super.key,
@@ -36,24 +39,64 @@ class OeNavApp extends StatelessWidget {
   final bool useRouter;
 
   @override
+  State<OeNavApp> createState() => _OeNavAppState();
+}
+
+class _OeNavAppState extends State<OeNavApp> {
+  GoRouter? _router;
+
+  @override
+  void initState() {
+    super.initState();
+    _recreateRouter();
+  }
+
+  @override
+  void didUpdateWidget(covariant OeNavApp oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final routerInputsChanged = oldWidget.destinations != widget.destinations ||
+        oldWidget.initialLocation != widget.initialLocation ||
+        oldWidget.initialTab != widget.initialTab ||
+        oldWidget.useRouter != widget.useRouter;
+    if (routerInputsChanged) {
+      _recreateRouter();
+    }
+  }
+
+  void _recreateRouter() {
+    _router?.dispose();
+    _router = widget.useRouter
+        ? createOeNavRouter(
+            destinations: widget.destinations,
+            initialLocation:
+                widget.initialLocation ?? widget.initialTab.location,
+          )
+        : null;
+  }
+
+  @override
+  void dispose() {
+    _router?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final theme = oeNavTheme(brightness: brightness);
-    if (!useRouter) {
+    final theme = oeNavTheme(brightness: widget.brightness);
+    final router = _router;
+    if (router == null) {
       return MaterialApp(
         theme: theme,
         home: OeNavIndexedHost(
-          destinations: destinations,
-          initialTab: initialTab,
+          destinations: widget.destinations,
+          initialTab: widget.initialTab,
         ),
       );
     }
 
     return MaterialApp.router(
       theme: theme,
-      routerConfig: createOeNavRouter(
-        destinations: destinations,
-        initialLocation: initialLocation ?? initialTab.location,
-      ),
+      routerConfig: router,
     );
   }
 }
