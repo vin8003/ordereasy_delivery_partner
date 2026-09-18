@@ -1,0 +1,17 @@
+name: oe_status
+description: >
+  Isolated OrderEasy delivery-partner client for mark delivered /
+  delivery_failed transitions (optional note + photo path stub).
+version: 0.1.0
+publish_to: none
+repository: https://github.com/vin8003/ordereasy_delivery_partner
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  http: ^1.2.2
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.8
