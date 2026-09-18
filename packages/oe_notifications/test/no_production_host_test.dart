@@ -10,8 +10,11 @@ void main() {
     );
     final hits = <String>[];
 
-    final root = Directory('lib');
-    if (root.existsSync()) {
+    for (final dirName in <String>['lib', 'test']) {
+      final root = Directory(dirName);
+      if (!root.existsSync()) {
+        continue;
+      }
       for (final entity in root.listSync(recursive: true)) {
         if (entity is! File || !entity.path.endsWith('.dart')) {
           continue;

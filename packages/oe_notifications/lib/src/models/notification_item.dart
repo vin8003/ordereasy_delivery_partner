@@ -12,13 +12,29 @@ class NotificationItem {
   /// Reconstructs an item from [json].
   ///
   /// Accepts camelCase and snake_case keys.
+  /// Throws [FormatException] when required fields are missing.
   factory NotificationItem.fromJson(Map<String, dynamic> json) {
+    final id = json['id'];
+    final title = json['title'];
+    final body = json['body'];
+    final createdAt = _readTime(json, 'createdAt', 'created_at');
+    if (id is! String || id.isEmpty) {
+      throw const FormatException('NotificationItem.id is required');
+    }
+    if (title is! String || title.isEmpty) {
+      throw const FormatException('NotificationItem.title is required');
+    }
+    if (body is! String || body.isEmpty) {
+      throw const FormatException('NotificationItem.body is required');
+    }
+    if (createdAt == null) {
+      throw const FormatException('NotificationItem.createdAt is required');
+    }
     return NotificationItem(
-      id: json['id'] as String? ?? '',
-      title: json['title'] as String? ?? '',
-      body: json['body'] as String? ?? '',
-      createdAt: _readTime(json, 'createdAt', 'created_at') ??
-          DateTime.fromMillisecondsSinceEpoch(0, isUtc: true),
+      id: id,
+      title: title,
+      body: body,
+      createdAt: createdAt,
       read: _readBool(json, 'read'),
     );
   }

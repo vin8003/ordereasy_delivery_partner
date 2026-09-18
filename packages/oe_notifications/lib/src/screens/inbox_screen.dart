@@ -35,67 +35,97 @@ class InboxScreen extends StatefulWidget {
 }
 
 class _InboxScreenState extends State<InboxScreen> {
-  late Future<_InboxSnapshot> _snapshot;
+  List<NotificationItem>? _items;
+  Object? _error;
+  bool _loading = true;
+
+  int get _unreadCount =>
+      _items?.where((item) => !item.read).length ?? 0;
 
   @override
   void initState() {
     super.initState();
-    _snapshot = _load();
+    _reload(showSpinner: false);
   }
 
-  Future<_InboxSnapshot> _load() async {
-    final items = await widget.repository.list();
-    final unread = await widget.repository.unreadCount();
-    return _InboxSnapshot(items: items, unreadCount: unread);
+  @override
+  void didUpdateWidget(InboxScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.repository != widget.repository) {
+      _reload(showSpinner: _items == null);
+    }
   }
 
-  Future<void> _markRead(String id) async {
-    await widget.repository.markRead(id);
+  Future<void> _reload({required bool showSpinner}) async {
+    if (showSpinner) {
+      setState(() {
+        _loading = true;
+        _error = null;
+      });
+    }
+    try {
+      final items = await widget.repository.list();
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _items = items;
+        _error = null;
+        _loading = false;
+      });
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _error = error;
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _markRead(NotificationItem item) async {
+    if (item.read) {
+      return;
+    }
+    await widget.repository.markRead(item.id);
     if (!mounted) {
       return;
     }
-    setState(() {
-      _snapshot = _load();
-    });
+    await _reload(showSpinner: false);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<_InboxSnapshot>(
-      future: _snapshot,
-      builder: (context, snapshot) {
-        final data = snapshot.data;
-        final unreadLabel =
-            data == null ? widget.title : '${data.unreadCount} unread';
-
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(widget.title),
-            actions: [
-              if (data != null)
-                Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: Center(
-                    child: Text(
-                      unreadLabel,
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: [
+          if (_items != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Center(
+                child: Text(
+                  '$_unreadCount unread',
+                  style: Theme.of(context).textTheme.labelLarge,
                 ),
-            ],
-          ),
-          body: _buildBody(snapshot),
-        );
-      },
+              ),
+            ),
+        ],
+      ),
+      body: _buildBody(),
     );
   }
 
-  Widget _buildBody(AsyncSnapshot<_InboxSnapshot> snapshot) {
-    if (!snapshot.hasData) {
+  Widget _buildBody() {
+    if (_loading && _items == null) {
       return const Center(child: CircularProgressIndicator());
     }
+    if (_error != null && _items == null) {
+      return Center(child: Text('Could not load notifications'));
+    }
 
-    final items = snapshot.data!.items;
+    final items = _items ?? const <NotificationItem>[];
     if (items.isEmpty) {
       return const Center(
         key: InboxScreen.emptyStateKey,
@@ -127,20 +157,14 @@ class _InboxScreenState extends State<InboxScreen> {
           subtitle: Text(item.body),
           trailing: item.read
               ? null
-              : const Icon(Icons.circle, size: 10, color: Colors.blue),
-          onTap: () => _markRead(item.id),
+              : Icon(
+                  Icons.circle,
+                  size: 10,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+          onTap: () => _markRead(item),
         );
       },
     );
   }
-}
-
-class _InboxSnapshot {
-  const _InboxSnapshot({
-    required this.items,
-    required this.unreadCount,
-  });
-
-  final List<NotificationItem> items;
-  final int unreadCount;
 }

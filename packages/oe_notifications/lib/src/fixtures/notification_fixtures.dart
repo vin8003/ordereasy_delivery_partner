@@ -2,7 +2,7 @@ import '../models/notification_item.dart';
 
 /// In-memory dummy inbox payloads. Never loaded from a remote host.
 abstract final class NotificationFixtures {
-  /// Seed inbox used by [DummyNotificationRepository] by default.
+  /// Seed inbox used by the dummy repository by default.
   ///
   /// Three unread rider alerts plus one already-read earnings note.
   static final List<NotificationItem> seed = <NotificationItem>[
@@ -27,7 +27,7 @@ abstract final class NotificationFixtures {
     NotificationItem(
       id: 'ntf-1001',
       title: 'Weekly earnings settled',
-      body: '₹2,450 was credited for last week’s completed deliveries.',
+      body: '₹2,450 was credited for last week\'s completed deliveries.',
       createdAt: DateTime.utc(2026, 9, 17, 9, 0),
       read: true,
     ),
