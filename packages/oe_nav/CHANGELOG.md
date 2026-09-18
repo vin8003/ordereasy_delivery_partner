@@ -4,5 +4,6 @@
 
 - Material 3 `NavigationBar` shell with Orders, Map, Earnings, History,
   and Profile tabs.
-- go_router `StatefulShellRoute` and Navigator `IndexedStack` stubs.
+- Host-composable `oeNavStatefulShellRoute` plus preview `createOeNavRouter`.
+- Navigator `IndexedStack` stub (`OeNavIndexedHost`).
 - Theme-aware placeholder pages; hosts inject feature stubs.
