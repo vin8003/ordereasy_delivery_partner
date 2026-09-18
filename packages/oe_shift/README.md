@@ -39,3 +39,4 @@ a SharedPreferences-shaped bag without a plugin.
 - Going online starts a shift if none is open.
 - Going offline does not end the shift.
 - Ending a shift forces the rider offline.
+- `RiderShift` stores timestamps in UTC and treats online as on-shift.
