@@ -14,17 +14,16 @@ void main() {
 
   test('DummyProfileRepository can return a profile that omits vehicle_number',
       () async {
-    const withoutVehicle = RiderProfile(
-      name: 'Ravi',
-      phone: '9000000000',
-      isOnline: false,
+    final repo = DummyProfileRepository(
+      profile: DummyProfileRepository.fixtureWithoutVehicle,
     );
-    final repo = DummyProfileRepository(profile: withoutVehicle);
 
     final profile = await repo.fetchProfile();
 
+    expect(profile, DummyProfileRepository.fixtureWithoutVehicle);
     expect(profile.vehicleNumber, isNull);
     expect(profile.toJson().containsKey('vehicle_number'), isFalse);
+    expect(profile.name, DummyProfileRepository.fixture.name);
+    expect(profile.phone, DummyProfileRepository.fixture.phone);
   });
-
 }

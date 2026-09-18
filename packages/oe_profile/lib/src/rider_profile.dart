@@ -2,13 +2,14 @@
 class RiderProfile {
   /// Creates a rider profile.
   ///
-  /// [vehicleNumber] is optional. Empty values are treated as omitted.
-  const RiderProfile({
+  /// [vehicleNumber] is optional. Null, empty, and whitespace-only
+  /// values are stored as omitted (`null`).
+  RiderProfile({
     required this.name,
     required this.phone,
-    this.vehicleNumber,
+    String? vehicleNumber,
     required this.isOnline,
-  });
+  }) : vehicleNumber = _normalizeVehicle(vehicleNumber);
 
   /// Reconstructs a profile from [json].
   ///
@@ -78,10 +79,18 @@ class RiderProfile {
         'vehicleNumber: $vehicleNumber, isOnline: $isOnline)';
   }
 
+  static String? _normalizeVehicle(String? value) {
+    if (value == null) {
+      return null;
+    }
+    final trimmed = value.trim();
+    return trimmed.isEmpty ? null : trimmed;
+  }
+
   static String? _readOptionalVehicle(Map<String, dynamic> json) {
     final value = json['vehicle_number'] ?? json['vehicleNumber'];
-    if (value is String && value.isNotEmpty) {
-      return value;
+    if (value is String) {
+      return _normalizeVehicle(value);
     }
     return null;
   }

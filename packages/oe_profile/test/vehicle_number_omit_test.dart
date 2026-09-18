@@ -4,7 +4,7 @@ import 'package:oe_profile/oe_profile.dart';
 void main() {
   group('RiderProfile optional vehicle_number omit', () {
     test('toJson omits vehicle_number when it is null', () {
-      const profile = RiderProfile(
+      final profile = RiderProfile(
         name: 'Asha Kumar',
         phone: '+919876543210',
         isOnline: true,
@@ -16,18 +16,51 @@ void main() {
     });
 
     test('toJson omits vehicle_number when it is empty', () {
-      const profile = RiderProfile(
+      final profile = RiderProfile(
         name: 'Asha Kumar',
         phone: '+919876543210',
         vehicleNumber: '',
         isOnline: false,
       );
 
+      expect(profile.vehicleNumber, isNull);
+      expect(profile.toJson().containsKey('vehicle_number'), isFalse);
+      expect(
+        profile,
+        RiderProfile(
+          name: 'Asha Kumar',
+          phone: '+919876543210',
+          isOnline: false,
+        ),
+      );
+    });
+
+    test('constructor treats whitespace-only vehicle_number as omitted', () {
+      final profile = RiderProfile(
+        name: 'Asha Kumar',
+        phone: '+919876543210',
+        vehicleNumber: '   ',
+        isOnline: true,
+      );
+
+      expect(profile.vehicleNumber, isNull);
+      expect(profile.toJson().containsKey('vehicle_number'), isFalse);
+    });
+
+    test('fromJson treats whitespace-only vehicle_number as omitted', () {
+      final profile = RiderProfile.fromJson(const {
+        'name': 'Asha Kumar',
+        'phone': '+919876543210',
+        'vehicle_number': '   ',
+        'online': true,
+      });
+
+      expect(profile.vehicleNumber, isNull);
       expect(profile.toJson().containsKey('vehicle_number'), isFalse);
     });
 
     test('toJson includes vehicle_number when present', () {
-      const profile = RiderProfile(
+      final profile = RiderProfile(
         name: 'Asha Kumar',
         phone: '+919876543210',
         vehicleNumber: 'DL01AB1234',
@@ -83,9 +116,32 @@ void main() {
       expect(profile.vehicleNumber, 'MH12CD5678');
     });
 
+    test('fromJson reads camelCase vehicleNumber and isOnline aliases', () {
+      final profile = RiderProfile.fromJson(const {
+        'name': 'Ravi',
+        'phone': '9000000000',
+        'vehicleNumber': 'KA03EF9012',
+        'isOnline': true,
+      });
+
+      expect(profile.vehicleNumber, 'KA03EF9012');
+      expect(profile.isOnline, isTrue);
+    });
+
+    test('fromJson reads is_online alias', () {
+      final profile = RiderProfile.fromJson(const {
+        'name': 'Ravi',
+        'phone': '9000000000',
+        'is_online': false,
+      });
+
+      expect(profile.isOnline, isFalse);
+      expect(profile.vehicleNumber, isNull);
+    });
+
     test('round-trip keeps omitted vehicle_number omitted', () {
       final restored = RiderProfile.fromJson(
-        const RiderProfile(
+        RiderProfile(
           name: 'Asha Kumar',
           phone: '+919876543210',
           isOnline: true,

@@ -27,10 +27,12 @@ void main() {
 
   test('package never ships Windows platform files', () {
     final winPaths = <String>[];
+    final skip = <String>{'.dart_tool', 'build'};
     final root = Directory.current;
     for (final entity in root.listSync(recursive: true)) {
       final path = entity.path;
-      if (path.contains('${Platform.pathSeparator}.dart_tool${Platform.pathSeparator}')) {
+      final parts = path.split(Platform.pathSeparator);
+      if (parts.any(skip.contains)) {
         continue;
       }
       if (path.contains('${Platform.pathSeparator}windows${Platform.pathSeparator}') ||

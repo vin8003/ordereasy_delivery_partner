@@ -12,7 +12,7 @@ class ProfileScreen extends StatelessWidget {
   const ProfileScreen({
     super.key,
     required this.profile,
-    this.onLogout,
+    required this.onLogout,
   });
 
   /// Fields to display.
@@ -22,7 +22,7 @@ class ProfileScreen extends StatelessWidget {
   ///
   /// Hosts should wire real session teardown here. This package does
   /// not call auth logout.
-  final VoidCallback? onLogout;
+  final VoidCallback onLogout;
 
   bool get _hasVehicle {
     final value = profile.vehicleNumber;

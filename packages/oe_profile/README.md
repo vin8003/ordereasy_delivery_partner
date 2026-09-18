@@ -8,7 +8,7 @@ Other packages can depend on this library without touching the app-root scaffold
 
 - Profile fields: `name`, `phone`, optional `vehicle_number`, display-only `online` flag.
 - `DummyProfileRepository` returns in-memory fixtures. No HTTP.
-- `ProfileScreen` shows those fields and exposes a `VoidCallback` logout stub. It does not clear auth.
+- `ProfileScreen` shows those fields and requires a `VoidCallback onLogout` stub. It does not clear auth.
 - Do not point this package at live `*.ordereasy.win` hosts.
 - This package never ships Windows (`*.win`) platform files.
 

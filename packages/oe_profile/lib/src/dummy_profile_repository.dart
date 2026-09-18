@@ -11,18 +11,18 @@ class DummyProfileRepository implements ProfileRepository {
       : _profile = profile ?? fixture;
 
   /// Typical rider used by the stub (includes a vehicle number).
-  static const RiderProfile fixture = RiderProfile(
+  static final RiderProfile fixture = RiderProfile(
     name: 'Asha Kumar',
     phone: '+919876543210',
     vehicleNumber: 'DL01AB1234',
     isOnline: true,
   );
 
-  /// Same rider without a vehicle number.
-  static const RiderProfile fixtureWithoutVehicle = RiderProfile(
+  /// Same rider as [fixture], with `vehicle_number` omitted.
+  static final RiderProfile fixtureWithoutVehicle = RiderProfile(
     name: 'Asha Kumar',
     phone: '+919876543210',
-    isOnline: false,
+    isOnline: true,
   );
 
   final RiderProfile _profile;

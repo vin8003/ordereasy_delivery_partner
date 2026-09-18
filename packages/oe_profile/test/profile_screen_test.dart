@@ -3,14 +3,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:oe_profile/oe_profile.dart';
 
 void main() {
-  const withVehicle = RiderProfile(
+  final withVehicle = RiderProfile(
     name: 'Asha Kumar',
     phone: '+919876543210',
     vehicleNumber: 'DL01AB1234',
     isOnline: true,
   );
 
-  const withoutVehicle = RiderProfile(
+  final withoutVehicle = RiderProfile(
     name: 'Ravi Singh',
     phone: '9000000000',
     isOnline: false,
@@ -25,7 +25,7 @@ void main() {
       MaterialApp(
         home: ProfileScreen(
           profile: profile,
-          onLogout: onLogout,
+          onLogout: onLogout ?? () {},
         ),
       ),
     );
@@ -50,6 +50,20 @@ void main() {
     expect(find.text('9000000000'), findsOneWidget);
     expect(find.text('Vehicle number'), findsNothing);
     expect(find.text('Offline'), findsOneWidget);
+  });
+
+  testWidgets('omits vehicle_number row when the constructor value is empty',
+      (tester) async {
+    final emptyVehicle = RiderProfile(
+      name: 'Ravi Singh',
+      phone: '9000000000',
+      vehicleNumber: '',
+      isOnline: false,
+    );
+
+    await pumpScreen(tester, profile: emptyVehicle);
+
+    expect(find.text('Vehicle number'), findsNothing);
   });
 
   testWidgets('logout button invokes the callback stub without clearing profile',
