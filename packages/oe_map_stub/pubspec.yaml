@@ -1,0 +1,19 @@
+name: oe_map_stub
+description: >
+  Isolated navigation/map stub that builds geo: and OpenStreetMap URLs for a
+  delivery stop. No map SDKs, API keys, or network calls.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.8.0
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
