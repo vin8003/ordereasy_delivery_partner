@@ -1,0 +1,13 @@
+name: oe_pod_stub
+description: >
+  Isolated dummy proof-of-delivery photo stub. Attaches stub image metadata
+  to an OFD order id in an in-memory store.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.5.0
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.8
