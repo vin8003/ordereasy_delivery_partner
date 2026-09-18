@@ -38,4 +38,43 @@ void main() {
     expect(normalized.isOnline, isTrue);
     expect(normalized.isOnShift, isTrue);
   });
+
+  test('constructor and copyWith keep online riders on-shift', () {
+    final constructed = RiderShift(isOnline: true, isOnShift: false);
+    expect(constructed.isOnline, isTrue);
+    expect(constructed.isOnShift, isTrue);
+
+    final copied = RiderShift.idle().copyWith(isOnline: true, isOnShift: false);
+    expect(copied.isOnline, isTrue);
+    expect(copied.isOnShift, isTrue);
+
+    final fromJson = RiderShift.fromJson(const {
+      'isOnline': true,
+      'isOnShift': false,
+    });
+    expect(fromJson.isOnShift, isTrue);
+  });
+
+  test('local DateTimes normalize to UTC for equality after JSON', () {
+    final local = DateTime(2026, 9, 18, 10);
+    final original = RiderShift(
+      isOnline: true,
+      isOnShift: true,
+      shiftStartedAt: local,
+      lastChangedAt: local,
+    );
+
+    expect(original.shiftStartedAt!.isUtc, isTrue);
+    expect(RiderShift.fromJson(original.toJson()), original);
+  });
+
+  test('fromJson ignores an unparsable timestamp', () {
+    final restored = RiderShift.fromJson(const {
+      'isOnline': true,
+      'shiftStartedAt': 'not-a-date',
+    });
+    expect(restored.isOnline, isTrue);
+    expect(restored.isOnShift, isTrue);
+    expect(restored.shiftStartedAt, isNull);
+  });
 }

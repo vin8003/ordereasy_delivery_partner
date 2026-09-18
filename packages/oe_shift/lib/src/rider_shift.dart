@@ -1,16 +1,21 @@
 /// Rider availability and shift clock state.
 class RiderShift {
   /// Creates a snapshot of rider availability.
-  const RiderShift({
-    required this.isOnline,
-    required this.isOnShift,
-    this.shiftStartedAt,
-    this.lastChangedAt,
-  });
+  ///
+  /// Online riders are always treated as on-shift. Timestamps are stored in UTC
+  /// so persisted and in-memory snapshots compare equal.
+  RiderShift({
+    required bool isOnline,
+    required bool isOnShift,
+    DateTime? shiftStartedAt,
+    DateTime? lastChangedAt,
+  })  : isOnline = isOnline,
+        isOnShift = isOnline || isOnShift,
+        shiftStartedAt = shiftStartedAt?.toUtc(),
+        lastChangedAt = lastChangedAt?.toUtc();
 
   /// Offline and off-shift (the dummy default).
-  factory RiderShift.idle() =>
-      const RiderShift(isOnline: false, isOnShift: false);
+  factory RiderShift.idle() => RiderShift(isOnline: false, isOnShift: false);
 
   /// Reconstructs a snapshot from [json].
   ///
@@ -105,7 +110,11 @@ class RiderShift {
       return value.toUtc();
     }
     if (value is String && value.isNotEmpty) {
-      return DateTime.parse(value).toUtc();
+      try {
+        return DateTime.parse(value).toUtc();
+      } on FormatException {
+        return null;
+      }
     }
     return null;
   }

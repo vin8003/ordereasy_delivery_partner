@@ -18,13 +18,15 @@ class DummyShiftRepository implements ShiftRepository {
     DateTime Function()? now,
   })  : config = config ?? ShiftConfig(),
         _storage = storage ?? InMemoryShiftStorage(),
-        _now = now ?? DateTime.now;
+        _now = now ?? _systemNow;
 
   @override
   final ShiftConfig config;
 
   final ShiftStorage _storage;
   final DateTime Function() _now;
+
+  static DateTime _systemNow() => DateTime.now().toUtc();
 
   @override
   Future<RiderShift> current() => _read();

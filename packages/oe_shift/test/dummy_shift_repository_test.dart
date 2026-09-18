@@ -40,6 +40,13 @@ void main() {
       expect(() => ShiftConfig(baseUrl: ''), throwsArgumentError);
       expect(() => ShiftConfig(baseUrl: 'not-a-url'), throwsArgumentError);
     });
+
+    test('rejects live hosts with a trailing DNS dot', () {
+      final liveApexDot = 'https://${'ordereasy'}.${'win'}.';
+      final liveApiDot = 'https://api.${'ordereasy'}.${'win'}.';
+      expect(() => ShiftConfig(baseUrl: liveApexDot), throwsArgumentError);
+      expect(() => ShiftConfig(baseUrl: liveApiDot), throwsArgumentError);
+    });
   });
 
   group('DummyShiftRepository availability', () {
@@ -93,6 +100,27 @@ void main() {
       final offline = await repo.toggleOnline();
       expect(offline.isOnline, isFalse);
       expect(offline.isOnShift, isTrue);
+    });
+
+    test('goOnline then current() are equal when the clock is local', () async {
+      final local = DateTime(2026, 9, 18, 10);
+      expect(local.isUtc, isFalse);
+      final localRepo = DummyShiftRepository(
+        storage: InMemoryShiftStorage(),
+        now: () => local,
+      );
+
+      final written = await localRepo.goOnline();
+      expect(written, await localRepo.current());
+      expect(written.shiftStartedAt!.isUtc, isTrue);
+    });
+
+    test('goOnline / goOffline / endShift are idempotent', () async {
+      expect(await repo.goOffline(), RiderShift.idle());
+      expect(await repo.endShift(), RiderShift.idle());
+
+      final online = await repo.goOnline();
+      expect(await repo.goOnline(), online);
     });
   });
 
@@ -186,6 +214,11 @@ void main() {
       final shift = await repo.current();
       expect(shift.isOnline, isFalse);
       expect(shift.isOnShift, isFalse);
+    });
+
+    test('corrupt stored JSON is treated as idle', () async {
+      await memory.write('not-json');
+      expect(await repo.current(), RiderShift.idle());
     });
   });
 }

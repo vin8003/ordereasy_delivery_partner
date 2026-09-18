@@ -28,7 +28,7 @@ class ShiftConfig {
         'must be an absolute URL',
       );
     }
-    final host = parsed.host.toLowerCase();
+    final host = parsed.host.toLowerCase().replaceFirst(RegExp(r'\.+$'), '');
     if (_isBlockedProductionHost(host)) {
       throw ArgumentError.value(
         baseUrl,
