@@ -1,0 +1,11 @@
+name: oe_history
+description: Completed delivery history list (delivered / delivery_failed) with a dummy day filter. Isolated from oe_orders assigned OFD.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dev_dependencies:
+  lints: ^5.1.1
+  test: ^1.25.15
