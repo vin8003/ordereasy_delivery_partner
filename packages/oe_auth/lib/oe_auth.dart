@@ -2,7 +2,7 @@
 ///
 /// Depend on this library from other packages. The default [AuthConfig.baseUrl]
 /// is `http://127.0.0.1:8080` — never a live OrderEasy host.
-library oe_auth;
+library;
 
 export 'src/auth_config.dart';
 export 'src/auth_exception.dart';
